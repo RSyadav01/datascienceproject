@@ -9,8 +9,16 @@ class DataIngestionConfig:
     unzip_dir: Path
 
 @dataclass
-class DataValidationConfig:  # Correct name
+class DataValidationConfig:
     root_dir: Path
     STATUS_FILE: Path  
     unzip_data_dir: Path
     all_schema: dict
+
+# ✅ ADD THIS: DataTransformationConfig
+@dataclass
+class DataTransformationConfig:
+    root_dir: Path
+    data_path: Path
+    processed_data_dir: Path
+    train_test_split_ratio: float
