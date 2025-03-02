@@ -1,7 +1,9 @@
 import yaml
 import os
+from src.Datascience.constants import *
+from src.Datascience.utils.common import read_yaml, create_directories
 from src.Datascience.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH, SCHEMA_FILE_PATH
-from src.Datascience.entity.config_entity import DataIngestionConfig, DataValidationConfig, DataTransformationConfig
+from src.Datascience.entity.config_entity import DataIngestionConfig, DataValidationConfig,DataTransformationConfig,ModelTrainerConfig
 
 
 # Define read_yaml function if not imported from utils
@@ -24,15 +26,16 @@ class ConfigurationManager:
                  params_filepath=PARAMS_FILE_PATH,
                  schema_filepath=SCHEMA_FILE_PATH):
         """Initialize ConfigurationManager and read YAML configurations."""
+    
         self.config = read_yaml(config_filepath)
         self.params = read_yaml(params_filepath)
         self.schema = read_yaml(schema_filepath)
 
-        create_directories([self.config['artifacts_root']])  # Ensure correct key access
+        create_directories([self.config['artifacts_root']])  
 
     def get_data_ingestion_config(self) -> DataIngestionConfig:
         """Returns DataIngestionConfig object with configuration values."""
-        config = self.config['data_ingestion']  # Use dictionary key access
+        config = self.config['data_ingestion']  
         create_directories([config['root_dir']])
 
         return DataIngestionConfig(
@@ -65,5 +68,26 @@ class ConfigurationManager:
             root_dir=config['root_dir'],
             processed_data_dir=config['processed_data_dir'],
             train_test_split_ratio=config['train_test_split_ratio'],
-            data_path=config['data_path']  # ✅ Fix: Added required 'data_path' argument
+            data_path=config['data_path'] 
         )
+
+    def get_model_trainer_config(self) ->ModelTrainerConfig:
+        config = self.config['model_trainer'] 
+
+        params = self.params['ElasticNet']  
+
+        schema = self.schema['TARGET_COLUMN'] 
+
+        create_directories([config['root_dir']]) 
+        
+        model_trainer_config = ModelTrainerConfig(
+    root_dir=config['root_dir'],
+    train_data_path=config['train_data_path'],
+    test_data_path=config['test_data_path'],
+    model_name=config['model_name'],
+    alpha=params['alpha'],
+    l1_ratio=params['l1_ratio'],
+    target_column=schema['name']
+)
+
+        return model_trainer_config
