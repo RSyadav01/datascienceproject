@@ -45,11 +45,20 @@ class ModelTrainer:
         train_data = pd.read_csv(self.config.train_data_path)
         test_data = pd.read_csv(self.config.test_data_path)
 
+       
+        target_column = str(self.config.target_column)  # Just access the string directly
+
+        # Ensure target column exists in dataset
+        if target_column not in train_data.columns:
+            raise KeyError(f"Target column '{target_column}' not found in training data columns: {train_data.columns}")
+        if target_column not in test_data.columns:
+            raise KeyError(f"Target column '{target_column}' not found in test data columns: {test_data.columns}")
+
         # Split features and target
-        train_x = train_data.drop(columns=[self.config.target_column])
-        test_x = test_data.drop(columns=[self.config.target_column])
-        train_y = train_data[self.config.target_column]
-        test_y = test_data[self.config.target_column]
+        train_x = train_data.drop(columns=[target_column])
+        test_x = test_data.drop(columns=[target_column])
+        train_y = train_data[target_column]
+        test_y = test_data[target_column]
 
         # Train ElasticNet model
         lr = ElasticNet(alpha=self.config.alpha, l1_ratio=self.config.l1_ratio, random_state=42)

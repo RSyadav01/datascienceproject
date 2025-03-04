@@ -24,3 +24,21 @@ model_trainer:
   model_name: model.joblib
   training_data: artifacts/train.csv 
   model_save_path: artifacts/model.pkl  
+
+model_evaluation:
+  root_dir: "artifacts/model_evaluation"
+  test_data_path: "artifacts/data_transformation/test.csv"
+  model_path: "artifacts/model_trainer/model.joblib"
+  metric_file_name: "artifacts/model_evaluation/metrics.json"
+  mlflow_uri: "https://dagshub.com/RSyadav01/datascienceproject.mlflow"
+  target_column:
+    TARGET_COLUMN: "quality"
+
+
+
+  
+
+ 
+
+
+
